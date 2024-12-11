@@ -1,26 +1,17 @@
+<!doctype html>
 <html>
     <head>
-        <title>second exercise</title>
-        <style>
-            input[type="text"].error {
-                border-color: #e74c3c;
-            }
-            #hint {
-                margin-top: 10px;
-                color: #666;
-            }
-            #hint.error {
-                color: #e74c3c;
-            }
-        </style>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>third exercise</title>
+        <link rel="stylesheet" href="styles.css" />
     </head>
     <body>
-        <div>
-            <h1>second exercise</h1>
-            <lable for="textInput">enter your text:</lable>
-            <input type="text" id="textInput" autofocus />
-            <p id="hint"></p>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="search here..." />
+            <ul id="dropdown" class="dropdown"></ul>
         </div>
+
         <script src="app.js"></script>
     </body>
 </html>

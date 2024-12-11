@@ -1,21 +1,57 @@
-const textInput = document.getElementById("textInput");
-const hint = document.getElementById("hint");
+document.addEventListener("DOMContentLoaded", () => {
+  const searchInput = document.getElementById("search-input");
+  const dropdown = document.getElementById("dropdown");
+  let debounceTimeout;
+  let products = [];
 
-let typeTime;
-textInput.addEventListener("input", () => {
-  clearTimeout(typeTime);
-  typeTime = setTimeout(doneTyping, 500);
-});
-function doneTyping() {
-  const inputValue = textInput.value;
-  const inputLength = inputValue.length;
-  hint.innerText = `text length: ${inputLength} character`;
+  const API_ENDPOINT = "https://jsonplaceholder.typicode.com/users";
 
-  if (inputLength > 30) {
-    hint.classList.add("error");
-    textInput.classList.add("error");
-  } else {
-    hint.classList.remove("error");
-    textInput.classList.remove("error");
+  fetch(API_ENDPOINT)
+    .then((response) => response.json())
+    .then((data) => {
+      products = data;
+      displayDropdown(products);
+    })
+    .catch((error) => console.error("error in retrieving data", error));
+
+  searchInput.addEventListener("input", () => {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+      const query = searchInput.value.trim().toLowerCase();
+      const filtered = filterProducts(query);
+      displayDropdown(filtered);
+    }, 500);
+  });
+
+  function filterProducts(query) {
+    let filtered = products.filter((product) =>
+      product.name.toLowerCase().includes(query),
+    );
+    filtered.sort((a, b) => a.name.localeCompare(b.name));
+    if (query === "") {
+      return products;
+    }
+    return filtered;
   }
-}
+
+  function displayDropdown(items) {
+    dropdown.innerHTML = "";
+    if (items.length === 0) {
+      const li = document.createElement("li");
+      li.textContent = "no user found!";
+      dropdown.appendChild(li);
+      return;
+    }
+    items.forEach((item) => {
+      const li = document.createElement("li");
+      li.textContent = item.name;
+      dropdown.appendChild(li);
+    });
+  }
+
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest(".search-container")) {
+      dropdown.innerHTML = "";
+    }
+  });
+});
